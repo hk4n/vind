@@ -1,11 +1,11 @@
-# Vim in Docker (vind)
+Vim in Docker (vind)
 
-## clone
-just clone it to whatever place you seems best :)
+Clone
+    just clone it to whatever place you seems best :)
 
-## build the docker image with
+Build the docker image with
     make all
 
-## add alias to .bashrc
+Add alias to .bashrc
 
-echo "alias vim='$HOME/vind/vim-run.sh'" >> .bashrc
+    echo "alias vim='$HOME/vind/vim-run.sh'" >> .bashrc
