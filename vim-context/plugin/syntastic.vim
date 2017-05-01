@@ -20,7 +20,3 @@ endfunction
 nnoremap <silent> <C-e> :<C-u>call ToggleErrors()<CR>
 
 " end of syntatic settings
-
-" let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
