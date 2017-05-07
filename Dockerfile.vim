@@ -42,7 +42,8 @@ RUN cd /vim/bundle \
     && git clone --depth 1 --recursive https://github.com/davidhalter/jedi-vim.git \
     && git clone --depth 1 https://github.com/ekalinin/Dockerfile.vim
 
-ADD http://www.vim.org/scripts/download_script.php?src_id=20786 /vim/colors/moria.vim
+
+ADD https://raw.githubusercontent.com/vim-scripts/moria/master/colors/moria.vim /vim/colors/moria.vim
 
 COPY vim-context /vim/
 
