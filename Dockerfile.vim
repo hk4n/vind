@@ -9,12 +9,14 @@ RUN apt-get update && \
         python3-dev \
         python3-pip \
         curl \
-        vim \
         exuberant-ctags \
+        libncurses-dev \
         git \
         shellcheck \
         locales \
         language-pack-en \
+        perl \
+        libperl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -25,11 +27,35 @@ RUN pip install --upgrade pip \
         pyflakes \
         autopep8
 
+RUN git clone https://github.com/vim/vim.git \
+    && cd vim/src \
+    && export PYTHON2_SRCDIR="/usr/lib/python2.7/config-x86_64-linux-gnu" \
+    && export PYTHON3_SRCDIR=$(python3 -c 'import sysconfig; print(sysconfig.get_config_vars("srcdir")[0])') \
+    && ./configure \
+    --enable-multibyte \
+    --enable-perlinterp=dynamic \
+    --enable-pythoninterp=dynamic \
+    --with-python-config-dir=$PYTHON2_SRCDIR \
+    --enable-python3interp \
+    --with-python3-config-dir=$PYTHON3_SRCDIR \
+    --enable-cscope \
+    --enable-gui=auto \
+    --with-features=huge \
+    --with-x \
+    --enable-fontset \
+    --enable-largefile \
+    --disable-netbeans \
+    --with-compiledby="vind" \
+    --enable-fail-if-missing \
+    && make \
+    && make install
+
 RUN mkdir -p /vim/autoload /vim/bundle
 
 ADD https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim /vim/autoload/pathogen.vim
 
 RUN cd /vim/bundle \
+    && git clone --depth 1 https://github.com/ConradIrwin/vim-bracketed-paste.git \
     && git clone --depth 1 https://github.com/scrooloose/nerdtree.git \
     && git clone --depth 1 https://github.com/jistr/vim-nerdtree-tabs.git \
     && git clone --depth 1 https://github.com/vim-airline/vim-airline.git \

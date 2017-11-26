@@ -2,6 +2,11 @@
 set mouse=a
 set ttymouse=xterm2
 
+" screen fix for auto :set paste
+if match($TERM, "screen")!=-1
+    set term=xterm
+endif
+
 " turn on pathogen for loading all vim plugins
 call pathogen#infect('bundle/{}')
 call pathogen#helptags()

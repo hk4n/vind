@@ -15,4 +15,4 @@ ln -s "/vim" "$HOMEDIR/.vim"
 ln -s "/vim/.vimrc" "$HOMEDIR/.vimrc"
 ln -s "/vim/pep8config" "$HOMEDIR/.config"
 
-su "$user" -c "vim $*"
+su "$user" -c "TERM='xterm-256color'; vim $*"
