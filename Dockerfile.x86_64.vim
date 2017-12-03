@@ -28,10 +28,11 @@ RUN pip install --upgrade pip \
         autopep8
 
 RUN git clone https://github.com/vim/vim.git \
+    && mkdir -p /install \
     && cd vim/src \
     && export PYTHON2_SRCDIR="/usr/lib/python2.7/config-x86_64-linux-gnu" \
     && export PYTHON3_SRCDIR=$(python3 -c 'import sysconfig; print(sysconfig.get_config_vars("srcdir")[0])') \
-    && ./configure \
+    && ./configure --prefix=/install \
     --enable-multibyte \
     --enable-perlinterp=dynamic \
     --enable-pythoninterp=dynamic \
@@ -50,6 +51,39 @@ RUN git clone https://github.com/vim/vim.git \
     && make \
     && make install
 
+FROM ubuntu:16.04
+
+ENV LC_ALL="en_US.UTF-8"
+
+RUN apt-get update && \
+    apt-get install -y \
+        python-dev \
+        python-pip \
+        python3-dev \
+        python3-pip \
+        curl \
+        exuberant-ctags \
+        libncurses-dev \
+        git \
+        shellcheck \
+        locales \
+        language-pack-en \
+        perl \
+        libperl-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN pip install --upgrade pip \
+    && pip install \
+        pep8 \
+        flake8 \
+        pyflakes \
+        autopep8
+
+COPY --from=0 /install /install
+
+RUN ln -s /install/bin/vim /bin/vim
+
 RUN mkdir -p /vim/autoload /vim/bundle
 
 ADD https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim /vim/autoload/pathogen.vim
@@ -67,7 +101,6 @@ RUN cd /vim/bundle \
     && git clone --depth 1 https://github.com/tell-k/vim-autopep8.git \
     && git clone --depth 1 --recursive https://github.com/davidhalter/jedi-vim.git \
     && git clone --depth 1 https://github.com/ekalinin/Dockerfile.vim
-
 
 ADD https://raw.githubusercontent.com/vim-scripts/moria/master/colors/moria.vim /vim/colors/moria.vim
 
